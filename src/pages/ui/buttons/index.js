@@ -42,7 +42,7 @@ export default class Buttons extends React.Component{
           <Button shape="circle" loading={this.state.loading}></Button>
           <Button type="primary" onClick={this.handleCloseClick}>关闭</Button>
         </Card>
-        <Card title="按钮组">
+        <Card title="按钮组" style={{marginTop: 10}}>
           <Button.Group>
             <Button type="primary" icon="left" style={{marginRight: 0}}>返回</Button>
             <Button type="primary" icon="right">前进</Button>
