@@ -1,7 +1,7 @@
 import React from 'react';
-import { HashRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 import Home from './Home';
-import Main from './../route1/Main';
+import Main from './Main';
 import About from './../route1/about';
 import Topic from './../route1/topic';
 
