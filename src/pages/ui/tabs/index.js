@@ -4,7 +4,7 @@ import './../ui.less';
 const TabPane = Tabs.TabPane;
 
 export default class Messages extends React.Component{
-
+  newTabIndex = 0;
   handleCallback = (key) => {
     message.info("Hi，您选择了页签:"+key)
   }
@@ -16,10 +16,41 @@ export default class Messages extends React.Component{
       { title:'Tab 3', content: 'Content 3', key: '3' },
     ];
     this.setState({
+      activeKey: panes[0].key,
       panes
     })
   }
 
+  onChange = (activeKey) => {
+    console.log(activeKey);
+    this.setState({
+      activeKey
+    })
+  }
+  onEdit = (targetKey, action) => {
+    this[action](targetKey);
+  }
+  add = () => {
+    const panes = this.state.panes;
+    const activeKey = `newTab${this.newTabIndex++}`;
+    panes.push({ title: activeKey, content: 'New Tab Pane', key: activeKey });
+    this.setState({ panes, activeKey });
+  }
+
+  remove = (targetKey) => {
+    let activeKey = this.state.activeKey;
+    let lastIndex;
+    this.state.panes.forEach((pane, i) => {
+      if (pane.key === targetKey) {
+        lastIndex = i - 1;
+      }
+    });
+    const panes = this.state.panes.filter(pane => pane.key !== targetKey);
+    if (lastIndex >= 0 && activeKey === targetKey) {
+      activeKey = panes[lastIndex].key;
+    }
+    this.setState({ panes, activeKey });
+  }
   render(){
     return(
       <div>
@@ -36,17 +67,22 @@ export default class Messages extends React.Component{
             <TabPane tab={<span><Icon type="edit"/>Tab 2</span>} key="2">Content2</TabPane>
             <TabPane tab={<span><Icon type="delete"/>Tab 3</span>} key="3">Content3</TabPane>
           </Tabs>
-          <Card title="Tab页签动态切换" className="card-wrap">
-            <Tabs defaultActiveKey="1" onChange={this.handleCallback}>
-              {
-                this.state.panes.map(pane => {
-                  return(<TabPane tab={pane.title} key={pane.key}>
-                      { pane.content }
-                    </TabPane>);
-                })
-              }
-            </Tabs>
-          </Card>
+        </Card>
+        <Card title="Tab页签动态切换" className="card-wrap">
+          <Tabs
+            onChange={this.onChange}
+            activeKey={this.state.activeKey}
+            type="editable-card"
+            onEdit={this.onEdit}
+          >
+            {
+              this.state.panes.map(pane => {
+                return(<TabPane tab={pane.title} key={pane.key}>
+                    { pane.content }
+                  </TabPane>);
+              })
+            }
+          </Tabs>
         </Card>
       </div>
     );
