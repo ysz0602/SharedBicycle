@@ -1,8 +1,18 @@
 import React from 'react';
-import { Card, Row, Col } from 'antd';
+import { Card, Row, Col, Modal } from 'antd';
 import './../ui.less';
 export default class Gallery extends React.Component{
 
+  state = {
+    visible: false
+  }
+
+  openGallery = (imgSrc) => {
+    this.setState({
+      visible: true,
+      currentImg: `/gallery/${imgSrc}`
+    })
+  }
   render(){
     const imgs = [
       ['1.png', '2.png', '3.png', '4.png', '5.png'],
@@ -13,7 +23,8 @@ export default class Gallery extends React.Component{
     ];
     const imgList = imgs.map(list => list.map((item, index) => (
       <Card
-        cover={<img src={'/gallery/'+item}/>}
+        style={{marginBottom: 10}}
+        cover={<img src={'/gallery/'+item} onClick={() => this.openGallery(item)} />}
         key={index}
         className="card-wrap"
       >
@@ -25,7 +36,7 @@ export default class Gallery extends React.Component{
     )))
     return(
       <div>
-        <Row>
+        <Row gutter={16}>
           <Col md={5}>
             { imgList[0] }
           </Col>
@@ -42,6 +53,18 @@ export default class Gallery extends React.Component{
             { imgList[4] }
           </Col>
         </Row>
+        <Modal
+          visible={this.state.visible}
+          title="图片画廊"
+          onCancel={()=>{
+            this.setState({
+              visible: false
+            })
+          }}
+          footer={null}
+        >
+          <img  width='100%' src={ this.state.currentImg } alt="" />
+        </Modal>
       </div>
     );
   }
